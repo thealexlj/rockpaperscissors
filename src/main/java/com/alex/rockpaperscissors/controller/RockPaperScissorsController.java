@@ -9,6 +9,7 @@ import com.alex.rockpaperscissors.model.RandomPlayer;
 import com.alex.rockpaperscissors.model.RockPlayer;
 import com.alex.rockpaperscissors.model.Round;
 import com.alex.rockpaperscissors.model.UserPlayer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -100,7 +101,7 @@ public class RockPaperScissorsController {
   }
 
   public synchronized List<Game> getScores(){
-    return (List<Game>) totalGames.values();
+    return new ArrayList<>(totalGames.values());
   }
 
   public synchronized List<Game> getScores(Player player){

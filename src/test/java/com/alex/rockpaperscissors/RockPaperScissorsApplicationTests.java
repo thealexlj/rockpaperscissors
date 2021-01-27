@@ -18,9 +18,17 @@ class RockPaperScissorsApplicationTests {
   @Autowired
   RockPaperScissorsController controller;
 
+  private Player player;
+
   @PostConstruct
   public void init() {
+    player = controller.getNewRandomPlayer();
 
+    for (int i = 0; i < 20; i++) {
+      Game game = new Game(player, controller.getNewRandomPlayer());
+      controller.addNewGame(game);
+      playRounds(game);
+    }
   }
 
   @Test
@@ -64,16 +72,7 @@ class RockPaperScissorsApplicationTests {
 
   @Test
   void getPlayerGames() {
-    Player player = controller.getNewRandomPlayer();
-
-    for (int i = 0; i < 20; i++) {
-      Game game = new Game(player, controller.getNewRandomPlayer());
-      controller.addNewGame(game);
-      playRounds(game);
-    }
-
     List<Game> games = controller.getScores(player);
-    System.out.println(games.toString());
     assert (!games.isEmpty() && games.get(0).getPlayer1().equals(player));
   }
 
