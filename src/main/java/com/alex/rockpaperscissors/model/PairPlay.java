@@ -7,7 +7,7 @@ public class PairPlay {
   private PlayType playType1;
   private PlayType playType2;
 
-  public PairPlay(){
+  public PairPlay() {
 
   }
 

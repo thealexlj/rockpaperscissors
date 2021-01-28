@@ -3,11 +3,12 @@ package com.alex.rockpaperscissors.model;
 import java.util.Objects;
 
 public class Round {
+
   private Play play1;
   private Play play2;
   private RoundResult roundResult;
 
-  public Round(){
+  public Round() {
 
   }
 

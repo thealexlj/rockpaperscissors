@@ -4,9 +4,8 @@ import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PairPlay;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
-import com.alex.rockpaperscissors.model.RoundResult;
 import com.alex.rockpaperscissors.model.Round;
-import java.util.ArrayList;
+import com.alex.rockpaperscissors.model.RoundResult;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class RockPaperScissorsController {
   private ConcurrentHashMap<PairPlay, RoundResult> results;
 
   @PostConstruct
-  private void init(){
+  private void init() {
     totalGames = new ConcurrentHashMap<>();
     results = new ConcurrentHashMap<>();
 
@@ -32,13 +31,13 @@ public class RockPaperScissorsController {
     PairPlay paperDraw = new PairPlay(PlayType.PAPER, PlayType.PAPER);
     PairPlay scissorsDraws = new PairPlay(PlayType.SCISSORS, PlayType.SCISSORS);
 
-    //WINS
+    //PLAYER1 WINS
 
     PairPlay rockWins = new PairPlay(PlayType.ROCK, PlayType.SCISSORS);
     PairPlay paperWins = new PairPlay(PlayType.PAPER, PlayType.ROCK);
     PairPlay scissorsWins = new PairPlay(PlayType.SCISSORS, PlayType.PAPER);
 
-    //LOSES
+    //PLAYER2 LOSES
 
     PairPlay rockLoses = new PairPlay(PlayType.ROCK, PlayType.PAPER);
     PairPlay paperLoses = new PairPlay(PlayType.PAPER, PlayType.SCISSORS);
@@ -59,29 +58,32 @@ public class RockPaperScissorsController {
 
   @Bean
   @Scope("prototype")
-  private Game getGame(){
+  private Game getGame() {
     return new Game();
   }
 
-  private synchronized RoundResult comparePlays(Round round){
-    return this.results.get(new PairPlay(round.getPlay1().getPlayType(), round.getPlay2().getPlayType()));
+  private synchronized RoundResult comparePlays(Round round) {
+    return this.results
+        .get(new PairPlay(round.getPlay1().getPlayType(), round.getPlay2().getPlayType()));
   }
 
-  public synchronized void playRandomRound(Game game){
-    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(), RoundResult.DRAW);
+  public synchronized void playRandomRound(Game game) {
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(),
+        RoundResult.DRAW);
     round.setRoundResult(comparePlays(round));
     game.addRound(round);
     totalGames.put(game.getId(), game);
   }
 
-  public synchronized void playRockRound(Game game){
-    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(), RoundResult.DRAW);
+  public synchronized void playRockRound(Game game) {
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(),
+        RoundResult.DRAW);
     round.setRoundResult(comparePlays(round));
     game.addRound(round);
     totalGames.put(game.getId(), game);
   }
 
-  public synchronized Player getNewPlayer(){
+  public synchronized Player getNewPlayer() {
     return new Player();
   }
 
@@ -93,21 +95,24 @@ public class RockPaperScissorsController {
     return game;
   }
 
-  public synchronized List<Game> getScores(){
-    return new ArrayList<>(totalGames.values());
+  public Game[] getScores() {
+    Game[] result = totalGames.values().toArray(new Game[0]);
+    return result;
   }
 
-  public synchronized List<Game> getScores(Player player){
-    return totalGames.values().stream().filter(game -> game.getPlayer1().equals(player) || game.getPlayer2().equals(player)).collect(
-        Collectors.toList());
+  public List<Game> getScores(Player player) {
+    return totalGames.values().stream()
+        .filter(game -> game.getPlayer1().equals(player) || game.getPlayer2().equals(player))
+        .collect(
+            Collectors.toList());
   }
 
-  public synchronized List<Game> getScores(Game game){
+  public List<Game> getScores(Game game) {
     return totalGames.values().stream().filter(g -> g.getId().equals(game.getId())).collect(
         Collectors.toList());
   }
 
-  public void addNewGame(Game game){
+  public void addNewGame(Game game) {
     this.totalGames.put(game.getId(), game);
   }
 

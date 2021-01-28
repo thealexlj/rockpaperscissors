@@ -83,8 +83,8 @@ class RockPaperScissorsApplicationTests {
 
   @Test
   void getAllGames() {
-    List<Game> games = controller.getScores();
-    assert (games.size() > 0);
+    Game[] games = controller.getScores();
+    assert (games.length > 0);
   }
 
   @Test

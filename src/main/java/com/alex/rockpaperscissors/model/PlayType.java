@@ -6,7 +6,7 @@ public enum PlayType {
   SCISSORS;
 
   public static PlayType fromInteger(int x) {
-    switch(x) {
+    switch (x) {
       case 0:
         return ROCK;
       case 1:
@@ -18,7 +18,7 @@ public enum PlayType {
   }
 
   public static int toInteger(PlayType playType) {
-    switch(playType) {
+    switch (playType) {
       case ROCK:
         return 0;
       case PAPER:

@@ -11,17 +11,18 @@ public class Game {
   private final String id;
   private final List<Round> rounds;
 
-  public Game(){
-    this.id = "Game_"+ ThreadLocalRandom.current().nextInt();
+  public Game() {
+    this.id = "Game_" + ThreadLocalRandom.current().nextInt();
     this.rounds = new ArrayList<>();
   }
 
-  public Game(Player player1, Player player2){
-    this.id = "Game_"+ ThreadLocalRandom.current().nextInt();
+  public Game(Player player1, Player player2) {
+    this.id = "Game_" + ThreadLocalRandom.current().nextInt();
     this.rounds = new ArrayList<>();
     this.player1 = player1;
     this.player2 = player2;
   }
+
   public Player getPlayer1() {
     return player1;
   }
@@ -38,10 +39,20 @@ public class Game {
     this.player2 = player2;
   }
 
-  public String getId(){ return this.id; }
+  public String getId() {
+    return this.id;
+  }
 
-  public void addRound(Round round){ this.rounds.add(round); };
+  public void addRound(Round round) {
+    this.rounds.add(round);
+  }
 
-  public List<Round> getRounds() { return this.rounds; };
+  ;
+
+  public List<Round> getRounds() {
+    return this.rounds;
+  }
+
+  ;
 
 }

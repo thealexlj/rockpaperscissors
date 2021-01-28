@@ -5,7 +5,7 @@ public class Play {
   Player player;
   PlayType playType;
 
-  public Play (Player player, PlayType playType) {
+  public Play(Player player, PlayType playType) {
     this.player = player;
     this.playType = playType;
   }

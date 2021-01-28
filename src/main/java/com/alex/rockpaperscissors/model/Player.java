@@ -6,20 +6,22 @@ public class Player {
 
   private String id;
 
-  public Player(){
-    this.id = "Player_"+ ThreadLocalRandom.current().nextInt();
+  public Player() {
+    this.id = "Player_" + ThreadLocalRandom.current().nextInt();
   }
 
-  public String getId(){
+  public String getId() {
     return this.id;
-  };
+  }
+
+  ;
   private PlayType playType;
 
-  public PlayType getPlayType(){
+  public PlayType getPlayType() {
     return this.playType;
   }
 
-  public void setPlayType(PlayType playType){
+  public void setPlayType(PlayType playType) {
     this.playType = playType;
   }
 
