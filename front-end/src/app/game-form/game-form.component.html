@@ -1,0 +1,17 @@
+<div>
+  <form name="gameform" #f="ngForm">
+    <div>
+      <label for="selectPlay">Throw:</label>
+      <select required id="selectPlay"
+      name="selectPlay"
+      class="select"
+      [(ngModel)]="selectedPlay">
+        <option *ngFor="let play of plays" [ngValue]="play.numValue">{{play.value}}</option>
+     </select>
+    </div>
+    <div><button (click)="submitPlayRandom(selectedPlay)">Play Random</button>
+      <button (click)="submitPlayRock(selectedPlay)">Play Rock</button>
+      <button (click)="reset()">Reset</button></div>
+    <div><label>Received:</label></div>
+  </form>
+</div>
