@@ -7,7 +7,8 @@ import { GameFormComponent } from './game-form/game-form.component';
 import { UserScoresComponent } from './user-scores/user-scores.component';
 import { TotalScoresComponent } from './total-scores/total-scores.component';
 import { GameFormService } from './game-form/game-form.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { TotalScoresService } from './total-scores/total-scores.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule
   ],
-  providers: [GameFormService],
+  providers: [GameFormService, TotalScoresService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

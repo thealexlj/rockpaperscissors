@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Game } from '../model/game';
 import { PlayType } from '../model/play-type'
+import { RoundResult } from '../model/round-result';
 import { UserPlayer } from '../model/user-player';
 import { GameFormService } from './game-form.service';
 
@@ -44,14 +45,14 @@ export class GameFormComponent implements OnInit {
   }
 
   public getRoundResult(): string {
-    let roundResult = '';
+    let roundResult = {} as RoundResult;
     let message = '';
     
     if(this.game.rounds && this.game.rounds.length > 0){
       roundResult = this.game.rounds[this.game.rounds.length-1].roundResult;
-      if(roundResult == this.selectedPlay) {
+      if(roundResult == RoundResult.PLAYER1WINS) {
         message = 'YOU WON!!';
-      } else if (roundResult == 'DRAW') {
+      } else if (roundResult == RoundResult.DRAW) {
         message = 'DRAW!!';
       } else {
         message = 'YOU LOSE!!';

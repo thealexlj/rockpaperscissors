@@ -33,10 +33,6 @@ export class GameFormService{
         );
     }
 
-    private getNewPlayer(): Observable<UserPlayer> {
-        return this.http.get<UserPlayer>("http://localhost:8080/getNewPlayer") as Observable<UserPlayer>;
-    }
-
     private playRandomRound(game: Game) {
         this.http.post<Game>("http://localhost:8080/playRandomRound", game).subscribe(
             response => {
