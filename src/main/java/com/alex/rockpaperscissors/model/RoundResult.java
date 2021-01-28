@@ -1,5 +1,5 @@
 package com.alex.rockpaperscissors.model;
 
 public enum RoundResult {
-  ROCK, PAPER, SCISSORS, DRAW
+  PLAYER1WINS, PLAYER2WINS, DRAW
 }

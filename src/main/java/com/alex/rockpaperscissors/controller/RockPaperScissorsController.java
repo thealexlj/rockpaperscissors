@@ -48,13 +48,13 @@ public class RockPaperScissorsController {
     results.put(paperDraw, RoundResult.DRAW);
     results.put(scissorsDraws, RoundResult.DRAW);
 
-    results.put(rockWins, RoundResult.ROCK);
-    results.put(paperWins, RoundResult.PAPER);
-    results.put(scissorsWins, RoundResult.SCISSORS);
+    results.put(rockWins, RoundResult.PLAYER1WINS);
+    results.put(paperWins, RoundResult.PLAYER1WINS);
+    results.put(scissorsWins, RoundResult.PLAYER1WINS);
 
-    results.put(rockLoses, RoundResult.PAPER);
-    results.put(paperLoses, RoundResult.SCISSORS);
-    results.put(scissorsLoses, RoundResult.ROCK);
+    results.put(rockLoses, RoundResult.PLAYER2WINS);
+    results.put(paperLoses, RoundResult.PLAYER2WINS);
+    results.put(scissorsLoses, RoundResult.PLAYER2WINS);
   }
 
   @Bean
