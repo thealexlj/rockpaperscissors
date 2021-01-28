@@ -4,7 +4,6 @@ import com.alex.rockpaperscissors.controller.RockPaperScissorsController;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
-import com.alex.rockpaperscissors.model.Round;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -22,10 +21,10 @@ class RockPaperScissorsApplicationTests {
 
   @PostConstruct
   public void init() {
-    player = controller.getNewRandomPlayer();
+    player = controller.getNewPlayer();
 
     for (int i = 0; i < 20; i++) {
-      Game game = new Game(player, controller.getNewRandomPlayer());
+      Game game = new Game(player, controller.getNewPlayer());
       controller.addNewGame(game);
       playRounds(game);
     }
@@ -39,7 +38,7 @@ class RockPaperScissorsApplicationTests {
   void getRandomPlay() {
     List<PlayType> playTypes = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
-      playTypes.add(controller.getNewRandomPlayer().throwRound().getPlayType());
+      playTypes.add(controller.getNewPlayer().throwRound().getPlayType());
     }
 
     boolean allRock = true;
@@ -66,7 +65,7 @@ class RockPaperScissorsApplicationTests {
 
   @Test
   void getRockPlay() {
-    PlayType playType = controller.getNewRockPlayer().throwRound().getPlayType();
+    PlayType playType = controller.getNewPlayer().throwRound().getPlayType();
     assert (playType.equals(PlayType.ROCK));
   }
 
@@ -77,19 +76,8 @@ class RockPaperScissorsApplicationTests {
   }
 
   private void playRounds(Game game) {
-    Round round = controller.playRound(game);
-    game.addRound(round);
-
-    while (round.getResult() < 0) {
-      round = controller.playRound(game);
-      game.addRound(round);
-    }
-    Round finalRound = game.getRounds().get(game.getRounds().size()-1);
-
-    if (finalRound.getPlay1().getPlayType().equals(PlayType.fromInteger(finalRound.getResult()))) {
-      game.setWinner(finalRound.getPlay1().getPlayer());
-    } else {
-      game.setWinner(finalRound.getPlay2().getPlayer());
+    for(int i = 0; i < 5; i++){
+      controller.playRandomRound(game);
     }
   }
 

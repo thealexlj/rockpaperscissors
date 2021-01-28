@@ -8,7 +8,6 @@ public class Game {
 
   private Player player1;
   private Player player2;
-  private Player winner;
   private final String id;
   private final List<Round> rounds;
 
@@ -37,14 +36,6 @@ public class Game {
 
   public void setPlayer2(Player player2) {
     this.player2 = player2;
-  }
-
-  public Player getWinner() {
-    return winner;
-  }
-
-  public void setWinner(Player winner) {
-    this.winner = winner;
   }
 
   public String getId(){ return this.id; }

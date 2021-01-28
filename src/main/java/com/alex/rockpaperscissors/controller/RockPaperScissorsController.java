@@ -2,15 +2,10 @@ package com.alex.rockpaperscissors.controller;
 
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PairPlay;
-import com.alex.rockpaperscissors.model.Play;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
-import com.alex.rockpaperscissors.model.RandomPlayer;
-import com.alex.rockpaperscissors.model.RockPlayer;
 import com.alex.rockpaperscissors.model.Round;
-import com.alex.rockpaperscissors.model.UserPlayer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -71,22 +66,22 @@ public class RockPaperScissorsController {
     return this.results.get(new PairPlay(round.getPlay1().getPlayType(), round.getPlay2().getPlayType()));
   }
 
-  public synchronized Round playRound(Game game){
-    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRound(), -1);
+  public synchronized void playRandomRound(Game game){
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(), -1);
     round.setResult(comparePlays(round));
-    return round;
+    game.addRound(round);
+    totalGames.put(game.getId(), game);
   }
 
-  public synchronized Player getNewRandomPlayer(){
-    return new RandomPlayer();
+  public synchronized void playRockRound(Game game){
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(), -1);
+    round.setResult(comparePlays(round));
+    game.addRound(round);
+    totalGames.put(game.getId(), game);
   }
 
-  public synchronized Player getNewRockPlayer(){
-    return new RockPlayer();
-  }
-
-  public synchronized Player getNewUserPlayer(){
-    return new UserPlayer();
+  public synchronized Player getNewPlayer(){
+    return new Player();
   }
 
   public synchronized Game getNewGame(Player player1, Player player2) {
@@ -97,15 +92,17 @@ public class RockPaperScissorsController {
     return game;
   }
 
-  public synchronized void setGameWinner(String gameId, Player winner){
-  }
-
   public synchronized List<Game> getScores(){
     return new ArrayList<>(totalGames.values());
   }
 
   public synchronized List<Game> getScores(Player player){
     return totalGames.values().stream().filter(game -> game.getPlayer1().equals(player) || game.getPlayer2().equals(player)).collect(
+        Collectors.toList());
+  }
+
+  public synchronized List<Game> getScores(Game game){
+    return totalGames.values().stream().filter(g -> g.getId().equals(game.getId())).collect(
         Collectors.toList());
   }
 
