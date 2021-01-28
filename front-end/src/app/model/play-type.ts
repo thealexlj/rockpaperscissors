@@ -1,4 +1,3 @@
 export interface PlayType{
-    value: string;
-    numValue: number;
+    value: string
 }

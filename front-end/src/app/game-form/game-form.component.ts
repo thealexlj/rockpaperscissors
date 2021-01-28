@@ -12,53 +12,63 @@ import { GameFormService } from './game-form.service';
 export class GameFormComponent implements OnInit {
 
   constructor(private gameFormService : GameFormService) { }
+
   game: Game = {} as Game;
   player: UserPlayer = {} as UserPlayer;
-  plays : PlayType[] = [{value: 'Rock', numValue: 0}, {value: 'Paper', numValue: 1}, {value: 'Scissors', numValue: 2}];
-  selectedPlay : number = -1;
+  plays : PlayType[] = [{value: 'ROCK'}, {value: 'PAPER'}, {value: 'SCISSORS'}];
+  selectedPlay : string = '';
+
   ngOnInit(): void {
-    
-  this.getNewPlayer();
-
+    this.getGame();
   }
 
-  submitPlayRandom(value: number){
-    console.log(value);
-    console.log(this.game);
-    this.game.player1.playType = "ROCK";
-    this.gameFormService.playRandomRound(this.game).subscribe(response => {
-      console.log(response);
-      this.game = response;
-    });
+  submitPlayRandom(value: string){
+    this.game.player1.playType = value;
+    this.gameFormService.requestRandomRound(this.game);
   }
 
-  submitPlayRock(value: number){
-    console.log(value);
-    this.game.player1.playType = "ROCK";
-    this.gameFormService.playRockRound(this.game).subscribe(response => {
-      console.log(response);
-      this.game = response;
-    });
+  submitPlayRock(value: string){
+    this.game.player1.playType = value;
+    this.gameFormService.requestRockRound(this.game);
   }
 
   reset(){
-    this.gameFormService.setNewGame(this.game.player1).subscribe(response => {
-      this.game = response;
-    })
+    this.gameFormService.requestNewGame(this.player);
   }
 
-  private getNewPlayer(){
-    this.gameFormService.getNewPlayer().subscribe(response => {
-      this.player = response;
-      this.getNewGame();
+  private getGame(){
+    this.gameFormService.getGame().subscribe(g => {
+      this.game = g;
+      this.player = g.player1;
     });
   }
 
-  private getNewGame(){
-    this.gameFormService.setNewGame(this.player).subscribe(response => {
-      this.game = response;
-      console.log(this.game);
-    });
+  public getRoundResult(): string {
+    let roundResult = '';
+    let message = '';
+    
+    if(this.game.rounds && this.game.rounds.length > 0){
+      roundResult = this.game.rounds[this.game.rounds.length-1].roundResult;
+      if(roundResult == this.selectedPlay) {
+        message = 'YOU WON!!';
+      } else if (roundResult == 'DRAW') {
+        message = 'DRAW!!';
+      } else {
+        message = 'YOU LOSE!!';
+      }
+    }
+      
+    return message;
+  }
+
+  public getOpponentPlay(): string {
+    let roundResult = '';
+
+    if(this.game.rounds && this.game.rounds.length > 0) {
+      roundResult = 'Received: ' + this.game.rounds[this.game.rounds.length-1].play2.playType;
+    }
+
+    return roundResult;
   }
 
 }

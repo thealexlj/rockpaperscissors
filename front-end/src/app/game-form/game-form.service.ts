@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Game } from "../model/game";
 import { UserPlayer } from "../model/user-player";
 
@@ -8,23 +8,71 @@ import { UserPlayer } from "../model/user-player";
 export class GameFormService{
 
     constructor(private readonly http: HttpClient){
-
+        this.loadNewPlayer();
     }
 
-    public getNewPlayer(): Observable<UserPlayer> {
+    currentGame: Game = {} as Game;
+    currentPlayer: UserPlayer = {} as UserPlayer;
+    public currentGame$: Subject<Game> = new Subject();
+
+    private loadNewPlayer() {
+        this.http.get<UserPlayer>("http://localhost:8080/getNewPlayer").subscribe(
+            response => {
+                this.currentPlayer = response;
+                this.loadNewGame(this.currentPlayer);
+            }
+        );
+    }
+
+    private loadNewGame(player: UserPlayer) {
+        this.http.post<Game>("http://localhost:8080/getNewGame", player).subscribe(
+            response => {
+                this.currentGame = response;
+                this.announceNewGame();
+            }
+        );
+    }
+
+    private getNewPlayer(): Observable<UserPlayer> {
         return this.http.get<UserPlayer>("http://localhost:8080/getNewPlayer") as Observable<UserPlayer>;
     }
 
-    public playRandomRound(game: Game): Observable<Game> {
-        return this.http.post<Game>("http://localhost:8080/playRandomRound", game) as Observable<Game>;
+    private playRandomRound(game: Game) {
+        this.http.post<Game>("http://localhost:8080/playRandomRound", game).subscribe(
+            response => {
+                this.currentGame = response;
+                this.announceNewGame();
+            }
+        );
     }
 
-    public playRockRound(game: Game): Observable<Game> {
-        return this.http.post<Game>("http://localhost:8080/playRockRound", game) as Observable<Game>;
+    private playRockRound(game: Game) {
+        this.http.post<Game>("http://localhost:8080/playRockRound", game).subscribe(
+            response => {
+                this.currentGame = response;
+                this.announceNewGame();
+            }
+        );
     }
 
-    public setNewGame(player : UserPlayer): Observable<Game> {
-        return this.http.post<Game>("http://localhost:8080/getNewGame", player) as Observable<Game>;
+    private announceNewGame() {
+        this.currentGame$.next(this.currentGame);
+    }
+
+    public getGame() : Observable<Game> {
+        return this.currentGame$.asObservable();
+    }
+
+    public requestNewGame(player: UserPlayer) {
+        this.loadNewGame(player);
+    }
+
+    public requestRandomRound(game: Game){
+        this.playRandomRound(game);
+    }
+
+    public requestRockRound(game: Game){
+        this.playRockRound(game);
     }
 
 }

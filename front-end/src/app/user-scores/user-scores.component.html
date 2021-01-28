@@ -1,1 +1,16 @@
-<p>user-scores works!</p>
+<table>
+    <thead>
+        <tr>
+            <th>Player 1 Play</th>
+            <th>Player 2 Play</th>
+            <th>Round Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let round of getRounds()">
+            <td>{{round.play1.playType}}</td>
+            <td>{{round.play2.playType}}</td>
+            <td>{{round.roundResult}}</td>
+        </tr>
+    </tbody>
+</table>

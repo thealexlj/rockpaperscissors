@@ -6,12 +6,13 @@
       name="selectPlay"
       class="select"
       [(ngModel)]="selectedPlay">
-        <option *ngFor="let play of plays" [ngValue]="play.numValue">{{play.value}}</option>
+        <option *ngFor="let play of plays" [ngValue]="play.value">{{play.value}}</option>
      </select>
     </div>
     <div><button (click)="submitPlayRandom(selectedPlay)">Play Random</button>
       <button (click)="submitPlayRock(selectedPlay)">Play Rock</button>
       <button (click)="reset()">Reset</button></div>
-    <div><label>Received:</label></div>
+    <div><label>{{getOpponentPlay()}}</label></div>
+    <div><label>{{getRoundResult()}}</label></div>
   </form>
 </div>
