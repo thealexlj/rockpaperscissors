@@ -4,6 +4,7 @@ import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PairPlay;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
+import com.alex.rockpaperscissors.model.RoundResult;
 import com.alex.rockpaperscissors.model.Round;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Controller;
 public class RockPaperScissorsController {
 
   private ConcurrentHashMap<String, Game> totalGames;
-  private ConcurrentHashMap<PairPlay, Integer> results;
+  private ConcurrentHashMap<PairPlay, RoundResult> results;
 
   @PostConstruct
   private void init(){
@@ -43,17 +44,17 @@ public class RockPaperScissorsController {
     PairPlay paperLoses = new PairPlay(PlayType.PAPER, PlayType.SCISSORS);
     PairPlay scissorsLoses = new PairPlay(PlayType.SCISSORS, PlayType.ROCK);
 
-    results.put(rockDraw, -1);
-    results.put(paperDraw, -1);
-    results.put(scissorsDraws, -1);
+    results.put(rockDraw, RoundResult.DRAW);
+    results.put(paperDraw, RoundResult.DRAW);
+    results.put(scissorsDraws, RoundResult.DRAW);
 
-    results.put(rockWins, PlayType.toInteger(PlayType.ROCK));
-    results.put(paperWins, PlayType.toInteger(PlayType.PAPER));
-    results.put(scissorsWins, PlayType.toInteger(PlayType.SCISSORS));
+    results.put(rockWins, RoundResult.ROCK);
+    results.put(paperWins, RoundResult.PAPER);
+    results.put(scissorsWins, RoundResult.SCISSORS);
 
-    results.put(rockLoses, PlayType.toInteger(PlayType.PAPER));
-    results.put(paperLoses, PlayType.toInteger(PlayType.SCISSORS));
-    results.put(scissorsLoses, PlayType.toInteger(PlayType.ROCK));
+    results.put(rockLoses, RoundResult.PAPER);
+    results.put(paperLoses, RoundResult.SCISSORS);
+    results.put(scissorsLoses, RoundResult.ROCK);
   }
 
   @Bean
@@ -62,20 +63,20 @@ public class RockPaperScissorsController {
     return new Game();
   }
 
-  private synchronized int comparePlays(Round round){
+  private synchronized RoundResult comparePlays(Round round){
     return this.results.get(new PairPlay(round.getPlay1().getPlayType(), round.getPlay2().getPlayType()));
   }
 
   public synchronized void playRandomRound(Game game){
-    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(), -1);
-    round.setResult(comparePlays(round));
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(), RoundResult.DRAW);
+    round.setRoundResult(comparePlays(round));
     game.addRound(round);
     totalGames.put(game.getId(), game);
   }
 
   public synchronized void playRockRound(Game game){
-    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(), -1);
-    round.setResult(comparePlays(round));
+    Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(), RoundResult.DRAW);
+    round.setRoundResult(comparePlays(round));
     game.addRound(round);
     totalGames.put(game.getId(), game);
   }
