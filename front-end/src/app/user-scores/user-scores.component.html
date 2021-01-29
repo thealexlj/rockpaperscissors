@@ -1,4 +1,5 @@
-<table>
+<div class="table-wrapper">
+<table class="table table-striped table-hover">
   <thead>
   <tr>
     <th>Player 1 Play</th>
@@ -8,9 +9,10 @@
   </thead>
   <tbody>
   <tr *ngFor="let round of getRounds()">
-    <td>{{round.play1.playType}}</td>
-    <td>{{round.play2.playType}}</td>
-    <td>{{round.roundResult}}</td>
+    <td>{{round.play1}}</td>
+    <td>{{round.play2}}</td>
+    <td>{{round.result}}</td>
   </tr>
   </tbody>
 </table>
+</div>

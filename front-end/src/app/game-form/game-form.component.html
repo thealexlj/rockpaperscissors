@@ -1,20 +1,21 @@
 <div>
   <form name="gameform" #f="ngForm">
-    <div>
+    <div class="form-group">
       <label for="selectPlay">Throw:</label>
       <select required id="selectPlay"
               name="selectPlay"
-              class="select"
+              class="form-control"
+              style="width: 200px;"
               [(ngModel)]="selectedPlay">
         <option *ngFor="let play of plays" [ngValue]="play.value">{{play.value}}</option>
       </select>
     </div>
-    <div>
-      <button (click)="submitPlayRandom(selectedPlay)">Play Random</button>
-      <button (click)="submitPlayRock(selectedPlay)">Play Rock</button>
-      <button (click)="reset()">Reset</button>
+    <div class="form-group">
+      <button style="margin-right: 10px;" class="btn btn-secondary" (click)="submitPlayRandom(selectedPlay)">Play against Random</button>
+      <button style="margin-right: 10px;"  class="btn btn-secondary" (click)="submitPlayRock(selectedPlay)">Play against Rock</button>
+      <button style="margin-right: 10px;"  class="btn btn-secondary" (click)="reset()">Reset</button>
     </div>
-    <div><label>{{getOpponentPlay()}}</label></div>
-    <div><label>{{getRoundResult()}}</label></div>
+    <div class="form-group"><label>{{getOpponentPlay()}}</label></div>
+    <div class="form-group"><label>{{getRoundResult()}}</label></div>
   </form>
 </div>

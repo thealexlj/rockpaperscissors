@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameFormService } from '../game-form/game-form.service';
 import { Game } from '../model/game';
-import { Round } from '../model/round';
+import { RoundResult } from '../model/round-result';
 import { UserPlayer } from '../model/user-player';
 
 @Component({
@@ -27,8 +27,17 @@ export class UserScoresComponent implements OnInit {
     });
   }
 
-  public getRounds(): Round[] {
-    return this.game.rounds;
+  public getRounds(): any[] {
+    let rows: any[] = [];
+    this.game.rounds.forEach(round =>{
+      rows.push(
+        {
+          play1 : round.play1.playType, 
+          play2: round.play2.playType,
+          result: round.roundResult == RoundResult.PLAYER1WINS? 'Player 1 wins' : round.roundResult == RoundResult.DRAW? 'Draw' : 'Player 2 wins'
+        });
+    });
+    return rows;
   }
 
 }

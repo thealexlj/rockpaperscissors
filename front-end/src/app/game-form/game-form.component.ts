@@ -66,7 +66,7 @@ export class GameFormComponent implements OnInit {
     let roundResult = '';
 
     if(this.game.rounds && this.game.rounds.length > 0) {
-      roundResult = 'Received: ' + this.game.rounds[this.game.rounds.length-1].play2.playType;
+      roundResult = 'Your opponent threw: ' + this.game.rounds[this.game.rounds.length-1].play2.playType;
     }
 
     return roundResult;
