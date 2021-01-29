@@ -1,0 +1,21 @@
+<div class="table-wrapper">
+<table class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Total Rounds</th>
+    <th>Player 1 wins</th>
+    <th>Player 2 wins</th>
+    <th>Draws</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{getTotalRounds()}}</td>
+    <td>{{getTotalWinsPlayer1()}}</td>
+    <td>{{getTotalWinsPlayer2()}}</td>
+    <td>{{getTotalDraws()}}</td>
+  </tr>
+  </tbody>
+</table>
+<button class="btn btn-secondary" (click)="reload()">Reload results</button>
+</div>
