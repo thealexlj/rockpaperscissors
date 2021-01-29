@@ -2,6 +2,9 @@ package com.alex.rockpaperscissors.model;
 
 import java.util.Objects;
 
+/**
+ * Stores a pair of plays
+ */
 public class PairPlay {
 
   private PlayType playType1;

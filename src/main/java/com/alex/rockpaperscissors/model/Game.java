@@ -2,8 +2,12 @@ package com.alex.rockpaperscissors.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Stores a game with players and rounds
+ */
 public class Game {
 
   private Player player1;
@@ -53,6 +57,22 @@ public class Game {
     return this.rounds;
   }
 
-  ;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Game game = (Game) o;
+    return Objects.equals(player1, game.player1) && Objects
+        .equals(player2, game.player2) && Objects.equals(id, game.id) && Objects
+        .equals(rounds, game.rounds);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(player1, player2, id, rounds);
+  }
 }

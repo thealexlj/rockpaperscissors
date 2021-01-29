@@ -4,7 +4,10 @@ import com.alex.rockpaperscissors.controller.RockPaperScissorsController;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
+import com.alex.rockpaperscissors.model.Round;
+import com.alex.rockpaperscissors.model.RoundResult;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
@@ -38,7 +41,7 @@ class RockPaperScissorsApplicationTests {
   void getRandomPlay() {
     List<PlayType> playTypes = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
-      playTypes.add(controller.getNewPlayer().throwRound().getPlayType());
+      playTypes.add(controller.getNewPlayer().throwRoundRandom().getPlayType());
     }
 
     boolean allRock = true;
@@ -65,18 +68,13 @@ class RockPaperScissorsApplicationTests {
 
   @Test
   void getRockPlay() {
-    PlayType playType = controller.getNewPlayer().throwRound().getPlayType();
+    PlayType playType = controller.getNewPlayer().throwRoundRock().getPlayType();
     assert (playType.equals(PlayType.ROCK));
-  }
-
-  @Test
-  void getPlayerGames() {
-    List<Game> games = controller.getScores(player);
-    assert (!games.isEmpty() && games.get(0).getPlayer1().equals(player));
   }
 
   private void playRounds(Game game) {
     for(int i = 0; i < 5; i++){
+      game.getPlayer1().setPlayType(player.throwRoundRandom().getPlayType());
       controller.playRandomRound(game);
     }
   }
@@ -88,23 +86,37 @@ class RockPaperScissorsApplicationTests {
   }
 
   @Test
-  void computePlays() {
-
-  }
-
-  @Test
   void createGame() {
-
-  }
-
-  @Test
-  void setWinner() {
-
+    Game game = controller.getNewGame(controller.getNewPlayer(), controller.getNewPlayer());
+    assert(game!=null);
   }
 
   @Test
   void winnerIsCorrect(){
+    ArrayList<Game> games = new ArrayList<>(Arrays.asList(controller.getScores()));
 
+    for (Game game: games) {
+      for(Round round: game.getRounds()) {
+        if(round.getPlay1().getPlayType().equals(PlayType.ROCK) &&
+          round.getPlay2().getPlayType().equals(PlayType.ROCK) &&
+          !round.getRoundResult().equals(RoundResult.DRAW)) {
+            assert(false);
+        }
+
+        if(round.getPlay1().getPlayType().equals(PlayType.ROCK) &&
+            round.getPlay2().getPlayType().equals(PlayType.PAPER) &&
+            !round.getRoundResult().equals(RoundResult.PLAYER2WINS)) {
+          assert(false);
+        }
+
+        if(round.getPlay1().getPlayType().equals(PlayType.ROCK) &&
+            round.getPlay2().getPlayType().equals(PlayType.SCISSORS) &&
+            !round.getRoundResult().equals(RoundResult.PLAYER1WINS)) {
+          assert(false);
+        }
+      }
+    }
+    assert(true);
   }
 
 }

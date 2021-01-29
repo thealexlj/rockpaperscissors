@@ -1,5 +1,8 @@
 package com.alex.rockpaperscissors.model;
 
+/**
+ * Store playtypes for our game
+ */
 public enum PlayType {
   ROCK,
   PAPER,

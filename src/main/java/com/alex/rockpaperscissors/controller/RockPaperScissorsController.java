@@ -6,10 +6,12 @@ import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
 import com.alex.rockpaperscissors.model.Round;
 import com.alex.rockpaperscissors.model.RoundResult;
+import com.alex.rockpaperscissors.service.StoreService;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -17,13 +19,19 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class RockPaperScissorsController {
 
-  private ConcurrentHashMap<String, Game> totalGames;
   private ConcurrentHashMap<PairPlay, RoundResult> results;
+
+  @Autowired
+  StoreService storeService;
 
   @PostConstruct
   private void init() {
-    totalGames = new ConcurrentHashMap<>();
     results = new ConcurrentHashMap<>();
+
+    // This could be a configuration file on properties
+
+    // Here we store the possible outcomes of a round so
+    // we can access the result of the round instantly
 
     //DRAWS
 
@@ -62,25 +70,39 @@ public class RockPaperScissorsController {
     return new Game();
   }
 
-  private synchronized RoundResult comparePlays(Round round) {
+  /**
+   * Compare the plays of a round
+   *
+   * @param round
+   * @return RoundResult result of the round
+   */
+  private RoundResult comparePlays(Round round) {
     return this.results
         .get(new PairPlay(round.getPlay1().getPlayType(), round.getPlay2().getPlayType()));
   }
 
+  /**
+   * Plays a random round by forcing player 2 to throw a random playtype
+   * @param game
+   */
   public synchronized void playRandomRound(Game game) {
     Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRandom(),
         RoundResult.DRAW);
     round.setRoundResult(comparePlays(round));
     game.addRound(round);
-    totalGames.put(game.getId(), game);
+    storeService.addGame(game);
   }
 
+  /**
+   * Plays a random round by forcing player 2 to throw a rock playtype
+   * @param game
+   */
   public synchronized void playRockRound(Game game) {
     Round round = new Round(game.getPlayer1().throwRound(), game.getPlayer2().throwRoundRock(),
         RoundResult.DRAW);
     round.setRoundResult(comparePlays(round));
     game.addRound(round);
-    totalGames.put(game.getId(), game);
+    storeService.addGame(game);
   }
 
   public synchronized Player getNewPlayer() {
@@ -91,29 +113,16 @@ public class RockPaperScissorsController {
     Game game = getGame();
     game.setPlayer1(player1);
     game.setPlayer2(player2);
-    totalGames.put(game.getId(), game);
+    storeService.addGame(game);
     return game;
   }
 
   public Game[] getScores() {
-    Game[] result = totalGames.values().toArray(new Game[0]);
-    return result;
-  }
-
-  public List<Game> getScores(Player player) {
-    return totalGames.values().stream()
-        .filter(game -> game.getPlayer1().equals(player) || game.getPlayer2().equals(player))
-        .collect(
-            Collectors.toList());
-  }
-
-  public List<Game> getScores(Game game) {
-    return totalGames.values().stream().filter(g -> g.getId().equals(game.getId())).collect(
-        Collectors.toList());
+    return storeService.getGames();
   }
 
   public void addNewGame(Game game) {
-    this.totalGames.put(game.getId(), game);
+    storeService.addGame(game);
   }
 
 }

@@ -1,5 +1,10 @@
 package com.alex.rockpaperscissors.model;
 
+import java.util.Objects;
+
+/**
+ * Stores a Play associated with a player
+ */
 public class Play {
 
   Player player;
@@ -24,5 +29,22 @@ public class Play {
 
   public void setPlayType(PlayType playType) {
     this.playType = playType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Play play = (Play) o;
+    return Objects.equals(player, play.player) && playType == play.playType;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(player, playType);
   }
 }

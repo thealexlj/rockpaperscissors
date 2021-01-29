@@ -2,6 +2,9 @@ package com.alex.rockpaperscissors.model;
 
 import java.util.Objects;
 
+/**
+ * Stores a round info
+ */
 public class Round {
 
   private Play play1;
@@ -59,4 +62,6 @@ public class Round {
   public int hashCode() {
     return Objects.hash(play1, play2, roundResult);
   }
+
+
 }
