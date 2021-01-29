@@ -12,3 +12,5 @@ In order to test it, just clone the repo and type:
 $ mvn run package
 $ java -jar rockpaperscissors-0.0.1-SNAPSHOT.jar
 ```
+
+Then just go to http://localhost:8080 to test it!!
