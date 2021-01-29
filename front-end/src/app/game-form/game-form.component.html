@@ -11,8 +11,8 @@
       </select>
     </div>
     <div class="form-group">
-      <button style="margin-right: 10px;" class="btn btn-secondary" (click)="submitPlayRandom(selectedPlay)">Play against Random</button>
-      <button style="margin-right: 10px;"  class="btn btn-secondary" (click)="submitPlayRock(selectedPlay)">Play against Rock</button>
+      <button [disabled]="f.invalid" style="margin-right: 10px;" class="btn btn-secondary" (click)="submitPlayRandom(selectedPlay)">Play against Random</button>
+      <button [disabled]="f.invalid" style="margin-right: 10px;"  class="btn btn-secondary" (click)="submitPlayRock(selectedPlay)">Play against Rock</button>
       <button style="margin-right: 10px;"  class="btn btn-secondary" (click)="reset()">Reset</button>
     </div>
     <div class="form-group"><label>{{getOpponentPlay()}}</label></div>
