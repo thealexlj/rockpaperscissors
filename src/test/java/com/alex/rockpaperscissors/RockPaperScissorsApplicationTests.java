@@ -1,6 +1,6 @@
 package com.alex.rockpaperscissors;
 
-import com.alex.rockpaperscissors.controller.RockPaperScissorsController;
+import com.alex.rockpaperscissors.controller.GameService;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.model.Player;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class RockPaperScissorsApplicationTests {
 
   @Autowired
-  RockPaperScissorsController controller;
+  GameService controller;
 
   private Player player;
 

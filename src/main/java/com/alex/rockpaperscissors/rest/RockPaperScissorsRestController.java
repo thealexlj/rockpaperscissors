@@ -1,6 +1,6 @@
 package com.alex.rockpaperscissors.rest;
 
-import com.alex.rockpaperscissors.controller.RockPaperScissorsController;
+import com.alex.rockpaperscissors.controller.GameService;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RockPaperScissorsRestController {
 
   @Autowired
-  private RockPaperScissorsController controller;
+  private GameService controller;
 
   @GetMapping("getNewPlayer")
   public ResponseEntity<Player> getNewPlayer() {
