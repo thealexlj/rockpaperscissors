@@ -1,52 +1,53 @@
 package com.alex.rockpaperscissors.controller;
 
+import com.alex.rockpaperscissors.exception.GameNotFoundException;
+import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.service.GameService;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.Player;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
 
-@RestController()
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/games")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RockPaperScissorsRestController {
 
-  @Autowired
-  private GameService controller;
+  private final GameService gameService;
 
-  @GetMapping("getNewPlayer")
-  public ResponseEntity<Player> getNewPlayer() {
-    Player userPlayer = controller.getNewPlayer();
-    return new ResponseEntity<>(userPlayer, HttpStatus.OK);
+  public RockPaperScissorsRestController(GameService gameService) {
+    this.gameService = gameService;
   }
 
-  @PostMapping("getNewGame")
-  public ResponseEntity<Game> getNewGame(@RequestBody Player player) {
-    Player computerPlayer = controller.getNewPlayer();
-    Game game = new Game(player, computerPlayer);
-    controller.addNewGame(game);
-    return new ResponseEntity<>(game, HttpStatus.OK);
+  @Operation(summary = "Create a new game")
+  @PostMapping
+  public ResponseEntity<Game> createGame() {
+    Game game = gameService.createGame(
+            new Player(),
+            new Player()
+    );
+    return ResponseEntity.ok(game);
   }
 
-  @PostMapping("playRandomRound")
-  public ResponseEntity<Game> playRandomRound(@RequestBody Game game) {
-    controller.playRandomRound(game);
-    return new ResponseEntity<>(game, HttpStatus.OK);
+  @Operation(summary = "Play a round in a game")
+  @PostMapping("/{id}/rounds")
+  public ResponseEntity<Game> playRound(
+          @PathVariable UUID id,
+          @RequestParam PlayType playType
+  ) {
+      Game game = gameService.getGame(id);
+      Game updated = gameService.playRound(game.getId(), playType);
+    return ResponseEntity.ok(updated);
   }
 
-  @PostMapping("playRockRound")
-  public ResponseEntity<Game> playRockRound(@RequestBody Game game) {
-    controller.playRockRound(game);
-    return new ResponseEntity<>(game, HttpStatus.OK);
-  }
-
-  @GetMapping("getAllScores")
-  public ResponseEntity<Game[]> getAllScores() {
-    return new ResponseEntity<>(controller.getScores(), HttpStatus.OK);
+  @Operation(summary = "Get all games")
+  @GetMapping
+  public ResponseEntity<Collection<Game>> getAllGames() {
+    return ResponseEntity.ok(gameService.getScores());
   }
 }

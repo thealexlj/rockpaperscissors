@@ -56,46 +56,6 @@
 
 	<build>
 		<plugins>
-
-			<!-- Angular / Frontend build -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.1.0</version>
-				<executions>
-					<execution>
-						<id>npm-install</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<workingDirectory>${project.basedir}/front-end</workingDirectory>
-							<executable>npm</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-
-					<execution>
-						<id>npm-build</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<workingDirectory>${project.basedir}/front-end</workingDirectory>
-							<executable>npm</executable>
-							<arguments>
-								<argument>run</argument>
-								<argument>build</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- Spring Boot -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
