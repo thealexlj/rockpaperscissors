@@ -1,6 +1,5 @@
 package com.alex.rockpaperscissors.controller;
 
-import com.alex.rockpaperscissors.exception.GameNotFoundException;
 import com.alex.rockpaperscissors.model.PlayType;
 import com.alex.rockpaperscissors.service.GameService;
 import com.alex.rockpaperscissors.model.Game;

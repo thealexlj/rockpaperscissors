@@ -24,6 +24,4 @@ public class Player {
   public Play playRandom() {
     return play(PlayType.random());
   }
-
-  public Play playRock() { return play(PlayType.ROCK);}
 }
