@@ -1,6 +1,6 @@
-package com.alex.rockpaperscissors.rest;
+package com.alex.rockpaperscissors.controller;
 
-import com.alex.rockpaperscissors.controller.GameService;
+import com.alex.rockpaperscissors.service.GameService;
 import com.alex.rockpaperscissors.model.Game;
 import com.alex.rockpaperscissors.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
