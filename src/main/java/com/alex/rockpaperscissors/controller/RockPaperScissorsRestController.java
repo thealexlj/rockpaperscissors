@@ -41,6 +41,13 @@ public class RockPaperScissorsRestController {
     return ResponseEntity.status(HttpStatus.CREATED).body(player);
   }
 
+  @Operation(summary = "Get all players")
+  @GetMapping("/players")
+  public ResponseEntity<Collection<Player>> getAllPlayers() {
+    Collection<Player> players = playerService.getPlayers();
+    return ResponseEntity.ok(players);
+  }
+
   @Operation(summary = "Create a new game")
   @PostMapping("/games")
   public ResponseEntity<Game> createGame(

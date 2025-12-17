@@ -18,10 +18,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -161,5 +163,23 @@ class RockPaperScissorsRestControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void shouldReturnAllPlayers() throws Exception {
+    Player player1 = new Player("Alice");
+    Player player2 = new Player("Bob");
+
+    // Mockeamos el servicio
+    when(playerService.getPlayers()).thenReturn(List.of(player1, player2));
+
+    mockMvc.perform(get("/api/games/players")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$[0].id").value(player1.getId().toString()))
+            .andExpect(jsonPath("$[0].name").value(player1.getName()))
+            .andExpect(jsonPath("$[1].id").value(player2.getId().toString()))
+            .andExpect(jsonPath("$[1].name").value(player2.getName()));
   }
 }
