@@ -7,11 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.alex.rockpaperscissors.service.StoreService;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Implementation of GameStoreService in local memory
+ */
 @Repository
-public class InMemoryStoreService implements StoreService {
+public class InMemoryGameStoreService implements IGameStoreService {
 
   private final ConcurrentHashMap<UUID, Game> games = new ConcurrentHashMap<>();
 

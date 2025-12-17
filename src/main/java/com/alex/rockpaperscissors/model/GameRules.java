@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * Stores the rules of the game
+ */
 @Component
 public class GameRules {
 
@@ -21,6 +24,12 @@ public class GameRules {
             new PairPlay(PlayType.SCISSORS, PlayType.ROCK), RoundResult.PLAYER2WINS
     );
 
+    /**
+     * Resolves a Round given 2 plays of the type ROCK, PAPER, SCISSORS
+     * @param play1
+     * @param play2
+     * @return RoundResult with the result of the round
+     */
     public RoundResult resolve(PlayType play1, PlayType play2) {
         return RULES.get(new PairPlay(play1, play2));
     }

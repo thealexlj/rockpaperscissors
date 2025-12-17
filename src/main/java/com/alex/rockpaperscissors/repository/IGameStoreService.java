@@ -1,4 +1,4 @@
-package com.alex.rockpaperscissors.service;
+package com.alex.rockpaperscissors.repository;
 
 import com.alex.rockpaperscissors.model.Game;
 
@@ -6,7 +6,10 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface StoreService {
+/**
+ * Interface to define storage of games
+ */
+public interface IGameStoreService {
 
   void addGame(Game game);
 

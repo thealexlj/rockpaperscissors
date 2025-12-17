@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.Serial;
 
+/**
+ * Exception when a game hasn't been found in the storage
+ */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class GameNotFoundException extends RuntimeException {
 

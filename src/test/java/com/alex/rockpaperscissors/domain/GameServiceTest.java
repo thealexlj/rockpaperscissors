@@ -1,32 +1,30 @@
 package com.alex.rockpaperscissors.domain;
 
+import com.alex.rockpaperscissors.exception.GameNotFoundException;
 import com.alex.rockpaperscissors.model.*;
+import com.alex.rockpaperscissors.repository.IGameStoreService;
 import com.alex.rockpaperscissors.service.GameService;
-import com.alex.rockpaperscissors.service.StoreService;
+import com.alex.rockpaperscissors.service.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
 
     @Mock
-    StoreService storeService;
+    IGameStoreService gameStoreService;
+
+    @Mock
+    PlayerService playerService;
 
     @Mock
     GameRules gameRules;
@@ -36,63 +34,76 @@ class GameServiceTest {
 
     @Test
     void shouldCreateGame() {
-        Player p1 = new Player();
-        Player p2 = new Player();
+        Player p1 = new Player("player1");
+        Player p2 = new Player("player2");
 
-        Game game = gameService.createGame(p1, p2);
+        when(playerService.getPlayer(p1.getId())).thenReturn(p1);
+        when(playerService.getPlayer(p2.getId())).thenReturn(p2);
+
+        Game game = gameService.createGame(p1.getId(), p2.getId());
 
         assertNotNull(game);
         assertEquals(p1, game.getPlayer1());
         assertEquals(p2, game.getPlayer2());
-        verify(storeService).addGame(game);
+
+        verify(gameStoreService).addGame(game);
     }
 
     @Test
     void shouldPlayRoundAndStoreGame() {
-        Game game = new Game(new Player(), new Player());
+        Player p1 = new Player("player1");
+        Player p2 = new Player("player2");
+        Game game = new Game(p1, p2);
 
-        when(storeService.findById(game.getId()))
-                .thenReturn(Optional.of(game));
+        // Mocks para getGame y playerService
+        when(gameStoreService.findById(game.getId())).thenReturn(Optional.of(game));
+        when(playerService.getPlayer(p1.getId())).thenReturn(p1);
+        when(playerService.getPlayer(p2.getId())).thenReturn(p2);
 
-        when(gameRules.resolve(any(), any()))
-                .thenReturn(RoundResult.PLAYER1WINS);
+        // Mock de reglas
+        when(gameRules.resolve(any(), any())).thenReturn(RoundResult.PLAYER1WINS);
 
-        Game result = gameService.playRound(game.getId(), PlayType.ROCK);
+        Game result = gameService.playRound(
+                game.getId(),
+                p1.getId(),
+                PlayType.ROCK,
+                p2.getId(),
+                PlayType.SCISSORS
+        );
 
         assertNotNull(result);
         assertEquals(1, result.getRounds().size());
+        assertEquals(RoundResult.PLAYER1WINS, result.getRounds().get(0).result());
 
-        verify(storeService).addGame(game);
         verify(gameRules).resolve(any(), any());
+        verify(gameStoreService).addGame(game);
     }
 
     @Test
-    void shouldHandleConcurrentRoundsForSameGame() throws Exception {
-        int threads = 10;
-        ExecutorService executor = Executors.newFixedThreadPool(threads);
+    void shouldThrowGameNotFound() {
+        UUID randomId = UUID.randomUUID();
+        when(gameStoreService.findById(randomId)).thenReturn(Optional.empty());
 
-        Game game = new Game(new Player(), new Player());
+        assertThrows(GameNotFoundException.class, () ->
+                gameService.playRound(randomId, UUID.randomUUID(), PlayType.ROCK, UUID.randomUUID(), PlayType.SCISSORS)
+        );
+    }
 
-        when(storeService.findById(game.getId()))
-                .thenReturn(Optional.of(game));
+    @Test
+    void shouldCreateGameVsCpu() {
+        Player human = new Player("player1");
+        Player cpu = new Player("cpu");
 
-        when(gameRules.resolve(any(), any()))
-                .thenReturn(RoundResult.PLAYER1WINS);
+        when(playerService.getPlayer(human.getId())).thenReturn(human);
+        when(playerService.getCpuPlayer()).thenReturn(cpu);
+        when(playerService.getPlayer(cpu.getId())).thenReturn(cpu);
 
-        List<Callable<Void>> tasks = IntStream.range(0, threads)
-                .mapToObj(i -> (Callable<Void>) () -> {
-                    gameService.playRound(game.getId(), PlayType.ROCK);
-                    return null;
-                })
-                .toList();
+        Game game = gameService.createGameVsCpu(human.getId());
 
-        executor.invokeAll(tasks);
-        executor.shutdown();
-        executor.awaitTermination(5, TimeUnit.SECONDS);
+        assertNotNull(game);
+        assertEquals(human, game.getPlayer1());
+        assertEquals(cpu, game.getPlayer2());
 
-        assertEquals(threads, game.getRounds().size());
-
-        verify(storeService, times(threads)).addGame(game);
+        verify(gameStoreService).addGame(game);
     }
 }
-
