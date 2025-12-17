@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Global Exception handler of the application
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -14,6 +17,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GameNotFoundException.class)
     public ResponseEntity<Void> handleGameNotFound(GameNotFoundException ex) {
+        log.warn(ex.getMessage());
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<Void> handlePlayerNotFound(PlayerNotFoundException ex) {
         log.warn(ex.getMessage());
         return ResponseEntity.notFound().build();
     }
